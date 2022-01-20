@@ -49,11 +49,14 @@ function renderImageCard(data) {
     
 }
 
+
 function onLoadMore() {
-    
     imageAPIService.fetchImages().then((data) => {
+        
         renderImageCard(data);
-        lightbox().refresh()
+        lightbox().refresh();
+        pageScroll()
+        
         const restOfHits = data.totalHits - imageAPIService.page * 40;
          if (restOfHits<=0) {
              Notiflix.Notify.info("We're sorry, but you've reached the end of search results.",
@@ -73,4 +76,14 @@ function clearImageContainer() {
 function lightbox() {
     let lightBox = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: "250ms" });
     return lightBox;
+}
+
+function pageScroll() {
+    const { height: formHeight } = refs.form.getBoundingClientRect();
+    const { height: cardHeight } = refs.gallery.firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2 + formHeight*2,
+  behavior: 'smooth',
+});  
 }
